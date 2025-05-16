@@ -1,0 +1,9 @@
+{
+    "dependencies": {
+      "ws": "^8.18.2"
+    },
+    "scripts": {
+        "start": "node index.js",
+        "build": "npx esbuild index.js --bundle --platform=node --outfile=bundle.js --minify"
+    }
+}  
