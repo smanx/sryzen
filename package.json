@@ -1,9 +1,11 @@
 {
     "dependencies": {
-      "ws": "^8.18.2"
+      "ws": "^8.18.2",
+      "axios": "^1.7.2"
     },
     "scripts": {
         "start": "node index.js",
+        "test": "MAX_RECONNECT_ATTEMPTS=10 BARK_URL=https://api.day.app/P47nrEhGUKLVLPa6ZNzUsf COOKIE='connect.sid=s%3AzD5TFP1d1aIN-ZoTxkbM39olTFmRxXQF.2lThSTt846%2Bjzcf8uYw7Wd8dAU9PPDO5PdXotfvTjXo' node index.js",
         "build": "npx esbuild index.js --bundle --platform=node --outfile=bundle.js --minify"
     }
-}  
+}
