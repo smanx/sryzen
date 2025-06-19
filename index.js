@@ -13,11 +13,6 @@ let barkMessageSent = false; // 标志位，确保 Bark 消息只发送一次
 const HOST = 'my.sryzen.cloud'
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0'
 
-// https://my.sryzen.cloud/api/coins/ad-start
-// https://my.sryzen.cloud/api/coins/ad-view-start
-// https://my.sryzen.cloud/api/coins/ad-verify
-// https://my.sryzen.cloud/api/coins/ad-reward
-
 const TIME = 1000 * parseInt(process.env.TIME || '5', 10);
 
 // 创建axios实例
