@@ -87,7 +87,7 @@ async function startADS(cookie) {
         console.log('ad-reward', res.data);
         restartADS(cookie)
     } catch (error) {
-        console.error('ad-start error', error);
+        console.error('ad-start error', error.message);
         restartADS(cookie)
     }
 }
@@ -119,44 +119,49 @@ async function sendBarkMessage(title, body) {
 
 function start(cookie) {
     console.log('start', cookie);
-    // 使用 WebSocket 对象来建立 WebSocket 连接
-    const socket = new WebSocket(`wss://${HOST}/ws`, {
-        headers: {
-            "user-agent": UA,
-            "cookie": cookie
-        }
-    });
+    try {
+        // 使用 WebSocket 对象来建立 WebSocket 连接
+        const socket = new WebSocket(`wss://${HOST}/ws`, {
+            headers: {
+                "user-agent": UA,
+                "cookie": cookie
+            }
+        });
 
-    // 监听连接成功事件
-    socket.addEventListener('open', () => {
-        console.log('WebSocket 连接已建立');
-    });
+        // 监听连接成功事件
+        socket.addEventListener('open', () => {
+            console.log('WebSocket 连接已建立');
+        });
 
-    // 监听消息事件
-    socket.addEventListener('message', (event) => {
-        console.log('收到消息:', reconnectAttempts, event.data);
-        reconnectAttempts = 0; // 连接成功时重置计数器
-        barkMessageSent = false; // 连接成功时重置 Bark 消息发送标志
-    });
+        // 监听消息事件
+        socket.addEventListener('message', (event) => {
+            console.log('收到消息:', reconnectAttempts, event.data);
+            reconnectAttempts = 0; // 连接成功时重置计数器
+            barkMessageSent = false; // 连接成功时重置 Bark 消息发送标志
+        });
 
-    // 监听连接关闭事件
-    socket.addEventListener('close', () => {
-        console.log('WebSocket 连接已关闭', reconnectAttempts, MAX_RECONNECT_ATTEMPTS);
-        reconnectAttempts++;
-        if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS && !barkMessageSent) {
-            sendBarkMessage('WebSocket 连接异常', `WebSocket 连接已关闭，重连尝试次数达到 ${MAX_RECONNECT_ATTEMPTS} 次。`);
-            barkMessageSent = true; // 设置标志，表示已发送 Bark 消息
-        }
-        restart(cookie);
-    });
+        // 监听连接关闭事件
+        socket.addEventListener('close', () => {
+            console.log('WebSocket 连接已关闭', reconnectAttempts, MAX_RECONNECT_ATTEMPTS);
+            reconnectAttempts++;
+            if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS && !barkMessageSent) {
+                sendBarkMessage('WebSocket 连接异常', `WebSocket 连接已关闭，重连尝试次数达到 ${MAX_RECONNECT_ATTEMPTS} 次。`);
+                barkMessageSent = true; // 设置标志，表示已发送 Bark 消息
+            }
+            restart(cookie);
+        });
 
-    // 监听错误事件
-    socket.addEventListener('error', (error) => {
-        console.error('WebSocket 发生错误:', error);
-        reconnectAttempts++;
-        if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS && !barkMessageSent) {
-            sendBarkMessage('WebSocket 错误', `WebSocket 发生错误，重连尝试次数达到 ${MAX_RECONNECT_ATTEMPTS} 次。错误信息: ${error.message}`);
-            barkMessageSent = true; // 设置标志，表示已发送 Bark 消息
-        }
-    });
+        // 监听错误事件
+        socket.addEventListener('error', (error) => {
+            console.error('WebSocket 发生错误:', error.message);
+            reconnectAttempts++;
+            if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS && !barkMessageSent) {
+                sendBarkMessage('WebSocket 错误', `WebSocket 发生错误，重连尝试次数达到 ${MAX_RECONNECT_ATTEMPTS} 次。错误信息: ${error.message}`);
+                barkMessageSent = true; // 设置标志，表示已发送 Bark 消息
+            }
+        });
+    } catch (error) {
+        console.error('start WS', error.message);
+        restart(cookie)
+    }
 }
