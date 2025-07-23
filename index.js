@@ -52,7 +52,7 @@ apiClient.interceptors.request.use(
 // 检查 COOKIE 是否存在
 if (cookie) {
     start(cookie);
-    startADS(cookie)
+    // startADS(cookie)
 } else {
     console.error('COOKIE 环境变量未设置');
 }
