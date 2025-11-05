@@ -1,5 +1,5 @@
 # 第一阶段：构建阶段
-FROM node:lts-alpine AS builder
+FROM node:lts-alpine3.20 AS builder
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN npm run build
 RUN npm prune --production
 
 # 第二阶段：运行阶段
-FROM node:lts-alpine
+FROM node:lts-alpine3.20
 
 WORKDIR /app
 
